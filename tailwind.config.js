@@ -18,6 +18,7 @@ module.exports = {
         orange: "#F1B486",
         purple: "#AAAED3",
       },
+    },
     extend: {},
   },
   plugins: [],
