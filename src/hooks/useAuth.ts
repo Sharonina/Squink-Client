@@ -51,6 +51,7 @@ export const useAuth = () => {
   const handleSignup = async (userDetails: UserDetails) => {
     const API = `${routes.USERS}`;
     const data = await postWithAuthorization(API, userDetails);
+    console.log(data);
     setAuthorization({ token: data.token, expireDate: data.expireDate });
     router.push(routes.HOME);
   };
