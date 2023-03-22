@@ -128,7 +128,7 @@ export default function Signup() {
               <input
                 value={email}
                 onChange={handleEmailChange}
-                placeholder="notin@squink.com"
+                placeholder="sr_notin@squink.com"
                 data-testid="email-input"
                 className="w-full bg-white border-b border-b-pink outline-none"
               />
