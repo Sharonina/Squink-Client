@@ -5,6 +5,7 @@ import { getSession } from "next-auth/react";
 import Nav from "@/components/Nav/Nav";
 import { GetServerSideProps } from "next/types";
 import { Session } from "next-auth";
+import NoteDetails from "@/components/NoteDetails/NoteDetails";
 
 interface Props {
   session: Session | null;
@@ -12,6 +13,9 @@ interface Props {
 }
 
 export default function Home({ session, notes }: Props) {
+  const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [showTrashcan, setShowTrashcan] = React.useState<boolean>(false);
+
   return (
     <>
       <Head>
@@ -21,8 +25,15 @@ export default function Home({ session, notes }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-white dark:bg-black min-h-screen">
-        <NoteList notes={notes} />
-        <Nav />
+        {editMode && <NoteDetails />}
+        {!editMode && (
+          <NoteList
+            notes={notes}
+            showTrashcan={showTrashcan}
+            setShowTrashcan={setShowTrashcan}
+          />
+        )}
+        <Nav showTrashcan={showTrashcan} setShowTrashcan={setShowTrashcan} />
       </main>
     </>
   );

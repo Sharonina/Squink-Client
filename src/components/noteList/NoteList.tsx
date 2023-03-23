@@ -1,6 +1,6 @@
 import { deleteNote } from "@/utils/api/notes";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -15,6 +15,8 @@ export interface Note {
 
 interface Props {
   notes: Note[];
+  showTrashcan: boolean;
+  setShowTrashcan: Dispatch<SetStateAction<boolean>>;
 }
 
 const NoteColors = {
@@ -27,7 +29,7 @@ const NoteColors = {
 
 export default function NoteList(props: Props) {
   const [notes, setNotes] = useState(props.notes);
-  const [showTrashcan, setShowTrashcan] = useState<boolean>(false);
+  const { showTrashcan, setShowTrashcan } = props;
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
   const session = useSession();
@@ -169,19 +171,6 @@ export default function NoteList(props: Props) {
       >
         {notes?.map(generateItem)}
       </ResponsiveGridLayout>
-
-      <div className="fixed bottom-10 z-20 left-0 right-0 flex justify-center">
-        {showTrashcan && (
-          <div className="text-white bg-purple w-16 h-16 rounded-full flex justify-center items-center drop-shadow-2xl trashcan">
-            T
-          </div>
-        )}
-        {!showTrashcan && (
-          <div className="text-3xl text-white bg-purple w-16 h-16 rounded-full flex justify-center items-center drop-shadow-2xl">
-            +
-          </div>
-        )}
-      </div>
     </>
   );
 }
