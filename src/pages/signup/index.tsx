@@ -1,10 +1,10 @@
-import { UserContext } from "@/context/UserContext";
-import { routes } from "@/utils/constants/routes";
 import { isEmail, isEmpty, isPassword } from "@/utils/validations/validations";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
+import { createUser } from "@/utils/api/auth";
+import { useRouter } from "next/router";
+import { routes } from "@/utils/constants/routes";
 
 interface LoginErrors {
   email?: string;
@@ -18,7 +18,7 @@ export default function Signup() {
   const [name, setName] = React.useState<string>("");
   const [errors, setErrors] = React.useState<LoginErrors>({});
   const [isSubmitDisabled, setIsSubmitDisabled] = React.useState(true);
-  const { handleSignup } = React.useContext(UserContext);
+  const Router = useRouter();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const emailValue = event.target.value;
@@ -66,7 +66,15 @@ export default function Signup() {
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nameValue = event.target.value;
+    const isNameEmpty = isEmpty(nameValue);
     setName(nameValue);
+
+    if (isNameEmpty) {
+      return setErrors({
+        ...errors,
+        name: "Please enter a name",
+      });
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -76,7 +84,8 @@ export default function Signup() {
       email,
       password,
     };
-    handleSignup(userDetails);
+    await createUser(userDetails);
+    Router.push(routes.HOME);
   };
 
   React.useEffect(() => {
@@ -108,7 +117,7 @@ export default function Signup() {
           data-testid="login-page"
         >
           <div className="flex justify-center items-center text-4xl m-5">
-            <span className="text-gray">Squink</span>
+            <span className="text-purple">Squink</span>
           </div>
           <div className="w-full flex items-center justify-center flex-col">
             <div className="w-full mb-5">
@@ -121,18 +130,22 @@ export default function Signup() {
                 data-testid="name-input"
                 className="w-full bg-white border-b border-b-pink outline-none"
               />
-              {errors?.password && <p className="">{errors.password}</p>}
+              {errors?.name && (
+                <p className="text-pink text-xs">{errors.name}</p>
+              )}
             </div>
             <div className="w-full mb-5">
               <p className="text-black">Email</p>
               <input
                 value={email}
                 onChange={handleEmailChange}
-                placeholder="sr_notin@squink.com"
+                placeholder="sr_notin@gmail.com"
                 data-testid="email-input"
                 className="w-full bg-white border-b border-b-pink outline-none"
               />
-              {errors?.email && <p className="">{errors.email}</p>}
+              {errors?.email && (
+                <p className="text-pink text-xs">{errors.email}</p>
+              )}
             </div>
             <div className="w-full mb-5">
               <p className="text-black">Password</p>
@@ -144,7 +157,9 @@ export default function Signup() {
                 data-testid="password-input"
                 className="w-full bg-white border-b border-b-pink outline-none"
               />
-              {errors?.password && <p className="">{errors.password}</p>}
+              {errors?.password && (
+                <p className="text-pink text-xs">{errors.password}</p>
+              )}
             </div>
           </div>
           <div className="flex flex-col">
@@ -154,7 +169,7 @@ export default function Signup() {
               data-testid="submit-button"
               className="p-2 bg-purple w-60 rounded-3xl text-white hover:bg-purple/80 disabled:opacity-50 disabled:hover:bg-purple"
             >
-              Sign in
+              Sign up
             </button>
             <span className="text-black mt-3 text-sm text-center">
               {`Already have an account? `}

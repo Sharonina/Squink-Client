@@ -1,10 +1,10 @@
-import { UserContext } from "@/context/UserContext";
-import { routes } from "@/utils/constants/routes";
 import { isEmail, isEmpty, isPassword } from "@/utils/validations/validations";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { signIn, useSession } from "next-auth/react";
+import { routes } from "@/utils/constants/routes";
 
 interface LoginErrors {
   email?: string;
@@ -16,9 +16,8 @@ export default function Signin() {
   const [password, setPassword] = React.useState("");
   const [errors, setErrors] = React.useState<LoginErrors>({});
   const [isSubmitDisabled, setIsSubmitDisabled] = React.useState(true);
-  const Router = useRouter();
-  const { handleSignin } = React.useContext(UserContext);
-  // const { setAuthorization } = React.useContext(UserContext);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const router = useRouter();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const emailValue = event.target.value;
@@ -66,8 +65,16 @@ export default function Signin() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(process.env);
-    handleSignin(email, password);
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    if (result?.ok) {
+      router.push("/");
+    } else {
+      setErrorMessage("Invalid email or password");
+    }
   };
 
   React.useEffect(() => {
@@ -86,13 +93,14 @@ export default function Signin() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex justify-center items-center bg-white w-full h-screen">
+        {errorMessage && <div>{errorMessage}</div>}
         <form
           onSubmit={handleSubmit}
           className="w-80 flex items-center justify-center flex-col"
           data-testid="login-page"
         >
           <div className="flex justify-center items-center text-4xl m-5">
-            <span className="text-gray">Squink</span>
+            <span className="text-purple">squink</span>
           </div>
           <div className="w-full flex items-center justify-center flex-col">
             <div className="w-full mb-5">
@@ -100,7 +108,7 @@ export default function Signin() {
               <input
                 value={email}
                 onChange={handleEmailChange}
-                placeholder="sr_notin@squink.com"
+                placeholder="sr_notarin@gmail.com"
                 data-testid="email-input"
                 className="w-full bg-white border-b border-b-pink outline-none"
               />
