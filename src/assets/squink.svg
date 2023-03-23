@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 838.69 264.94">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: 0em;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #000;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 13px;
+      }
+
+      .cls-3 {
+        font-family: Signika-Light, Signika;
+        font-size: 65px;
+        font-variation-settings: 'wght' 300;
+        font-weight: 300;
+      }
+
+      .cls-4 {
+        letter-spacing: .17em;
+      }
+
+      .cls-5 {
+        letter-spacing: .13em;
+      }
+
+      .cls-6 {
+        font-family: Signika-Regular, Signika;
+        font-size: 148.56px;
+        font-variation-settings: 'wght' 400;
+      }
+
+      .cls-7 {
+        letter-spacing: 0em;
+      }
+    </style>
+  </defs>
+  <text class="cls-3" transform="translate(302.79 247.38)"><tspan class="cls-4" x="0" y="0">N</tspan><tspan class="cls-5" x="54.5" y="0">O</tspan><tspan class="cls-4" x="105.59" y="0">TES</tspan></text>
+  <g>
+    <text class="cls-6" transform="translate(208.87 122.49)"><tspan x="0" y="0">sq</tspan><tspan class="cls-7" x="143.58" y="0">u</tspan><tspan class="cls-1" x="224.33" y="0">ink</tspan></text>
+    <path class="cls-2" d="M217.3,112.84s-49.25-33.68-93.53,0c-52.13,39.66-94.45,9.09-91.38-29.72,3.07-38.81,31.27-44.11,35.42-41.15"/>
+    <path class="cls-2" d="M618.96,116.16s53.11-37,97.39-3.31c52.13,39.66,94.45,9.09,91.38-29.72s-31.27-44.11-35.42-41.15"/>
+  </g>
+</svg>
