@@ -1,17 +1,21 @@
-import { UserContext } from "@/context/UserContext";
+import { useSession } from "next-auth/react";
 import { useContext } from "react";
 import { UtilsContext } from "@/context/UtilsContext";
 
 export const useApi = () => {
-  const { VITE_API_URL } = import.meta.env;
-  const { authorization } = useContext(UserContext);
+  const { NEXT_PUBLIC_API_URL } = process.env;
+  const session = useSession();
+  const token = session?.data?.user?.token;
   const { setShowSnackbar, setSnackbar } = useContext(UtilsContext);
 
-  const getWithAuthorization = async (url, options = {}) => {
-    const apiUrl = `${VITE_API_URL}${url}`; //ya incluye slash
+  const getWithAuthorization = async (
+    url: string,
+    options?: any
+  ): Promise<any> => {
+    const apiUrl = `${NEXT_PUBLIC_API_URL}${url}`; //ya incluye slash
     const response = await fetch(apiUrl, {
       headers: {
-        Authorization: authorization.token,
+        Authorization: token,
       },
       ...options, //opciones que queremos añadir al request (headers, content, etc)
     });
@@ -19,9 +23,13 @@ export const useApi = () => {
     return data;
   };
 
-  const postWithoutAuthorization = async (url, body, options) => {
+  const postWithoutAuthorization = async (
+    url: string,
+    body: any,
+    options?: any
+  ): Promise<any> => {
     try {
-      const apiUrl = `${VITE_API_URL}${url}`;
+      const apiUrl = `${NEXT_PUBLIC_API_URL}${url}`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -34,7 +42,7 @@ export const useApi = () => {
         throw new Error(data.error);
       }
       return data;
-    } catch (error) {
+    } catch (error: any) {
       setSnackbar({
         message: error.message,
         severity: "error",
@@ -43,13 +51,17 @@ export const useApi = () => {
     }
   };
 
-  const postWithAuthorization = async (url, body, options) => {
+  const postWithAuthorization = async (
+    url: string,
+    body: any,
+    options?: any
+  ): Promise<any> => {
     try {
-      const apiUrl = `${VITE_API_URL}${url}`;
+      const apiUrl = `${NEXT_PUBLIC_API_URL}${url}`;
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
-          Authorization: authorization.token,
+          Authorization: token,
           "Content-Type": "application/json", //saber de que tipo viene el body
         },
         body: JSON.stringify(body),
@@ -59,7 +71,7 @@ export const useApi = () => {
         throw new Error(data.error);
       }
       return data;
-    } catch (err) {
+    } catch (err: any) {
       setSnackbar({
         message: err.message,
         severity: "error",
@@ -68,13 +80,17 @@ export const useApi = () => {
     }
   };
 
-  const putWithAuthorization = async (url, body, options) => {
+  const putWithAuthorization = async (
+    url: string,
+    body: any,
+    options?: any
+  ): Promise<any> => {
     try {
-      const apiUrl = `${VITE_API_URL}${url}`;
+      const apiUrl = `${NEXT_PUBLIC_API_URL}${url}`;
       const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
-          Authorization: authorization.token,
+          Authorization: token,
           "Content-Type": "application/json", //saber de que tipo viene el body
         },
         body: JSON.stringify(body),
@@ -84,7 +100,7 @@ export const useApi = () => {
         throw new Error(data.error);
       }
       return data;
-    } catch (error) {
+    } catch (error: any) {
       setSnackbar({
         message: error.message,
         severity: "error",

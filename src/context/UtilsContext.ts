@@ -12,7 +12,7 @@ interface UtilsContextType {
   setShowSnackbar: (showSnackbar: boolean) => void;
 }
 
-export const UtilsContext = createContext({
+export const UtilsContext = createContext<UtilsContextType>({
   snackbar: {
     message: "",
     severity: "success",
