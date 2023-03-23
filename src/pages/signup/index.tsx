@@ -174,7 +174,7 @@ export default function Signup() {
             <span className="text-black mt-3 text-sm text-center">
               {`Already have an account? `}
               <Link className="text-purple " href="/signin">
-                Signin
+                Sign in
               </Link>
             </span>
           </div>

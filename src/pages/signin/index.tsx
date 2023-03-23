@@ -143,7 +143,7 @@ export default function Signin() {
             <span className="text-black mt-3 text-sm text-center">
               {`Don't have an account? `}
               <Link className="text-purple " href="/signup">
-                Signup
+                Sign up
               </Link>
             </span>
           </div>
