@@ -40,34 +40,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const notes = [
-    {
-      uuid: "1",
-      title: "Nota 1",
-      content: "Contenido de la nota 1",
-      color: "pink",
+  //traer notas
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`, {
+    headers: {
+      Authorization: `${session.user.token}`,
     },
-    {
-      uuid: "2",
-      title: "Nota 2",
-      content:
-        "Contenido de la nota 2 Contenido de la nota 2 Contenido de la nota 2 Contenido de la nota 2",
-      color: "darkBlue",
-    },
-    {
-      uuid: "3",
-      title: "Nota 3",
-      content:
-        "Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 ",
-      color: "lightBlue",
-    },
-    {
-      uuid: "4",
-      title: "Nota 4",
-      content: "Contenido de la nota 4",
-      color: "orange",
-    },
-  ];
+  });
+
+  const notes = await data.json();
 
   return {
     props: {

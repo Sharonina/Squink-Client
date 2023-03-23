@@ -1,3 +1,5 @@
+import { deleteNote } from "@/utils/api/notes";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 
@@ -28,6 +30,7 @@ export default function NoteList(props: Props) {
   const [showTrashcan, setShowTrashcan] = useState<boolean>(false);
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
+  const session = useSession();
 
   const handleDrag: ReactGridLayout.ItemCallback = (
     layout,
@@ -68,7 +71,7 @@ export default function NoteList(props: Props) {
     setSelectedNote(element.getAttribute("id"));
   };
 
-  const handleDragStop: ReactGridLayout.ItemCallback = (
+  const handleDragStop: ReactGridLayout.ItemCallback = async (
     layout,
     oldItem,
     newItem,
@@ -91,6 +94,7 @@ export default function NoteList(props: Props) {
     ) {
       const newNotes = notes.filter((note) => note.uuid !== newItem.i);
       setNotes(newNotes);
+      await deleteNote(session?.data?.user?.token || "", newItem.i);
     }
     setShowTrashcan(false);
     setSelectedNote(null);
