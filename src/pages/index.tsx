@@ -5,6 +5,7 @@ import { getSession } from "next-auth/react";
 import Nav from "@/components/Nav/Nav";
 import { GetServerSideProps } from "next/types";
 import { Session } from "next-auth";
+import NoteDetails from "@/components/NoteDetails/NoteDetails";
 
 interface Props {
   session: Session | null;
@@ -12,6 +13,9 @@ interface Props {
 }
 
 export default function Home({ session, notes }: Props) {
+  const [editMode, setEditMode] = React.useState<boolean>(false);
+  const [showTrashcan, setShowTrashcan] = React.useState<boolean>(false);
+
   return (
     <>
       <Head>
@@ -21,8 +25,15 @@ export default function Home({ session, notes }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-white dark:bg-black min-h-screen">
-        <NoteList notes={notes} />
-        <Nav />
+        {editMode && <NoteDetails />}
+        {!editMode && (
+          <NoteList
+            notes={notes}
+            showTrashcan={showTrashcan}
+            setShowTrashcan={setShowTrashcan}
+          />
+        )}
+        <Nav showTrashcan={showTrashcan} setShowTrashcan={setShowTrashcan} />
       </main>
     </>
   );
@@ -40,34 +51,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const notes = [
-    {
-      uuid: "1",
-      title: "Nota 1",
-      content: "Contenido de la nota 1",
-      color: "pink",
+  //traer notas
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`, {
+    headers: {
+      Authorization: `${session.user.token}`,
     },
-    {
-      uuid: "2",
-      title: "Nota 2",
-      content:
-        "Contenido de la nota 2 Contenido de la nota 2 Contenido de la nota 2 Contenido de la nota 2",
-      color: "darkBlue",
-    },
-    {
-      uuid: "3",
-      title: "Nota 3",
-      content:
-        "Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 Contenido de la nota 3 ",
-      color: "lightBlue",
-    },
-    {
-      uuid: "4",
-      title: "Nota 4",
-      content: "Contenido de la nota 4",
-      color: "orange",
-    },
-  ];
+  });
+
+  const notes = await data.json();
 
   return {
     props: {

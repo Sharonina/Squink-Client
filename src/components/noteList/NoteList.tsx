@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { UtilsContext } from "@/context/UtilsContext";
+import { useApi } from "@/hooks/useApi";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -13,6 +15,8 @@ export interface Note {
 
 interface Props {
   notes: Note[];
+  showTrashcan: boolean;
+  setShowTrashcan: Dispatch<SetStateAction<boolean>>;
 }
 
 const NoteColors = {
@@ -24,10 +28,12 @@ const NoteColors = {
 };
 
 export default function NoteList(props: Props) {
+  const { showTrashcan, setShowTrashcan } = props;
   const [notes, setNotes] = useState(props.notes);
-  const [showTrashcan, setShowTrashcan] = useState<boolean>(false);
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
+  const { deleteWithAuthorization } = useApi();
+  const { setSnackbar, setShowSnackbar } = useContext(UtilsContext);
 
   const handleDrag: ReactGridLayout.ItemCallback = (
     layout,
@@ -68,7 +74,7 @@ export default function NoteList(props: Props) {
     setSelectedNote(element.getAttribute("id"));
   };
 
-  const handleDragStop: ReactGridLayout.ItemCallback = (
+  const handleDragStop: ReactGridLayout.ItemCallback = async (
     layout,
     oldItem,
     newItem,
@@ -91,6 +97,13 @@ export default function NoteList(props: Props) {
     ) {
       const newNotes = notes.filter((note) => note.uuid !== newItem.i);
       setNotes(newNotes);
+      const url = `/notes/${newItem.i}`;
+      const deletedNote = await deleteWithAuthorization(url);
+      setSnackbar({
+        message: `Deleted note: "${deletedNote.title}"`,
+        severity: "success",
+      });
+      setShowSnackbar(true);
     }
     setShowTrashcan(false);
     setSelectedNote(null);
@@ -165,19 +178,6 @@ export default function NoteList(props: Props) {
       >
         {notes?.map(generateItem)}
       </ResponsiveGridLayout>
-
-      <div className="fixed bottom-10 z-20 left-0 right-0 flex justify-center">
-        {showTrashcan && (
-          <div className="text-white bg-purple w-16 h-16 rounded-full flex justify-center items-center drop-shadow-2xl trashcan">
-            T
-          </div>
-        )}
-        {!showTrashcan && (
-          <div className="text-3xl text-white bg-purple w-16 h-16 rounded-full flex justify-center items-center drop-shadow-2xl">
-            +
-          </div>
-        )}
-      </div>
     </>
   );
 }
