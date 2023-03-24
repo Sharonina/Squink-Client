@@ -109,10 +109,35 @@ export const useApi = () => {
     }
   };
 
+  const deleteWithAuthorization = async (
+    url: string,
+    options?: any
+  ): Promise<any> => {
+    try {
+      const apiUrl = `${NEXT_PUBLIC_API_URL}${url}`;
+      const response = await fetch(apiUrl, {
+        method: "DELETE",
+        headers: {
+          Authorization: token,
+        },
+        ...options,
+      });
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      setSnackbar({
+        message: error.message,
+        severity: "error",
+      });
+      setShowSnackbar(true);
+    }
+  };
+
   return {
     getWithAuthorization,
     postWithoutAuthorization,
     postWithAuthorization,
     putWithAuthorization,
+    deleteWithAuthorization,
   };
 };
