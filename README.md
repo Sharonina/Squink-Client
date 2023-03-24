@@ -16,3 +16,8 @@ Notes web app. Mobile only.
   ![Sign in, sign up, menu](./src/assets/menus-light.png)
   ![home](./src/assets/home-light.png)
   ![notes](./src/assets/note-light.png)
+
+- Dark mode
+  ![Sign in, sign up, menu](./src/assets/menus-dark.png)
+  ![home](./src/assets/home-dark.png)
+  ![notes](./src/assets/note-dark.png)
