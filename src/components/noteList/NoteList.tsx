@@ -1,6 +1,6 @@
-import { deleteNote } from "@/utils/api/notes";
-import { useSession } from "next-auth/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { UtilsContext } from "@/context/UtilsContext";
+import { useApi } from "@/hooks/useApi";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { WidthProvider, Responsive } from "react-grid-layout";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -28,11 +28,12 @@ const NoteColors = {
 };
 
 export default function NoteList(props: Props) {
-  const [notes, setNotes] = useState(props.notes);
   const { showTrashcan, setShowTrashcan } = props;
+  const [notes, setNotes] = useState(props.notes);
   const [selectedNote, setSelectedNote] = useState<string | null>(null);
   const [readyToDelete, setReadyToDelete] = useState<boolean>(false);
-  const session = useSession();
+  const { deleteWithAuthorization } = useApi();
+  const { setSnackbar, setShowSnackbar } = useContext(UtilsContext);
 
   const handleDrag: ReactGridLayout.ItemCallback = (
     layout,
@@ -96,7 +97,13 @@ export default function NoteList(props: Props) {
     ) {
       const newNotes = notes.filter((note) => note.uuid !== newItem.i);
       setNotes(newNotes);
-      await deleteNote(session?.data?.user?.token || "", newItem.i);
+      const url = `/notes/${newItem.i}`;
+      const deletedNote = await deleteWithAuthorization(url);
+      setSnackbar({
+        message: `Deleted note: "${deletedNote.title}"`,
+        severity: "success",
+      });
+      setShowSnackbar(true);
     }
     setShowTrashcan(false);
     setSelectedNote(null);
