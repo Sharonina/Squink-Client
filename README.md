@@ -12,7 +12,7 @@ Notes web app. Mobile only.
 
 # Prototypes
 
-## High fidelity
+### High fidelity
 
 - Light mode
   ![Sign in, sign up, menu](./src/assets/menus-light.png)
